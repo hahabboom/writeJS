@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    class EventEmitter {
+        constructor() {
+            this.cache = {}
+        }
+        on(name, fn) {
+            console.log(this.cache)
+            if (this.cache[name]) {
+                this.cache[name].push(fn)
+            } else {
+                this.cache[name] = [fn]
+            }
+        }
+        off(name, fn){
+            let tasks = this.cache[name]
+            if (tasks) {
+                const index = task.findIndex(f => f === fn || f.callback === fn)
+                if (index >= 0) {
+                    tasks.slice(index, 1)
+                }
+            }
+        }
+        emit(name, once = false, ...args){
+            if(this.cache[name]){
+                // 其实就是创建副本
+                let tasks = this.cache[name].slice()
+                for(let fn of tasks) {
+                    fn(...args)
+                }
+                if (once) {
+                    delete this.cache[name]
+                }
+            }
+        }
+    }
+
+    let eventM = new EventEmitter()
+    let f1 = function (age) {
+        console.log(`111111111 + ${age}`)
+    }
+    let f2 = function (age) {
+        console.log(`222222222 + ${age}`)
+    }
+    eventM.on('event1', f1)
+    eventM.on('event2', f2)
+    eventM.emit('event1', f1, 13)
+    console.log(eventM)
+</script>
+</body>
+</html>
